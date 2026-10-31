@@ -1,0 +1,15 @@
+[project]
+name = "mlit-flood-damage-statistics-chiba-jp"
+version = "0.1.0"
+description = "MLIT 水害統計調査 (e-Stat), Chiba rows, reproducible collection"
+requires-python = ">=3.11"
+dependencies = ["pyarrow>=17", "duckdb>=1.5.5", "pandas", "openpyxl", "xlrd", "huggingface_hub>=0.25", "pyyaml", "beautifulsoup4"]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+pythonpath = ["scripts"]
