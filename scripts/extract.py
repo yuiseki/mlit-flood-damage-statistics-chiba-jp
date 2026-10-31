@@ -217,8 +217,10 @@ class Layout:
 def header_signature(g: Grid, rows: list, positional: bool = False) -> tuple:
     """The header texts row by row. Without `positional` the columns are left out: the same table can sit two columns further
     right in the next sheet of a workbook."""
-    return tuple((r, c if positional else 0, squash(g.get(r, c))) for r in rows for c in range(1, g.ncols + 1)
-                 if isinstance(g.get(r, c), str))  # fmt: skip
+    items = [(r, c, squash(g.get(r, c))) for r in rows for c in range(1, g.ncols + 1) if isinstance(g.get(r, c), str)]
+    if positional:
+        return tuple(items)
+    return tuple(sorted({t for _, _, t in items}))  # the set of header texts: also the height of the header may differ
 
 
 def analyse(g: Grid, prev: Layout | None = None) -> Layout:
@@ -375,6 +377,8 @@ def extract_grid(g: Grid, meta: dict, state: State | None = None) -> tuple[list[
         if not any(g.get(r, c) is not None for c in range(1, g.ncols + 1)):
             continue
         has_num = any(isinstance(g.get(r, c), float) for c in lay.data_cols)
+        if not has_num and any(isinstance(g.get(r, c), str) and not is_symbol(g.get(r, c)) for c in lay.data_cols):
+            continue  # a header repeated in the middle of the sheet (page break): text in the data columns, no number
         was_inherited, ditto_dims = False, []
         cls: dict = {}
         if lay.tree:

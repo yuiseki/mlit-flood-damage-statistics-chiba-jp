@@ -203,3 +203,19 @@ def test_no_prefecture_rows(tmp_path):
 def test_unit_in_header(text, unit):
     m = extract.UNIT_RE.search(text)
     assert (m.group(1) if m else None) == unit
+
+
+def test_header_repeated_inside_the_data_is_not_a_row(tmp_path):
+    def build(wb):
+        ws = wb.create_sheet("t")
+        ws["A3"], ws["B3"], ws["C3"] = "県名", "被害額", "計"
+        rows = [("北海道", 1, 1), ("青森県", 1, 1), ("千葉県", 2, 2), ("県名", "被害額", "計"), (None, 3, 3), ("東京都", 4, 4)]
+        for i, row in enumerate(rows):
+            for col, v in zip("ABC", row):
+                if v is not None:
+                    ws[f"{col}{5 + i}"] = v
+
+    (g,) = extract.open_grids(wb_path(tmp_path, build))
+    recs, d = extract.extract_grid(g, {})
+    assert d["chiba_rows"] == 2 and {r["source_row"] for r in recs} == {7, 9}  # the repeated header row 8 is skipped, row 9 goes on
+    assert all(r["symbol"] is None for r in recs)

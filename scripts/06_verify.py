@@ -81,6 +81,10 @@ def main() -> None:
                 got = d.get(r["source_cell"])
                 if r["value"] is not None:
                     ok = isinstance(got, float) and got == r["value"]
+                    if not ok and isinstance(got, float) and abs(got - r["value"]) <= 1e-9 * max(1.0, abs(r["value"])):
+                        res["float_noise"] = res.get("float_noise", 0) + 1  # a formula cell: the other reader (LibreOffice) recomputed it
+                        res.setdefault("float_noise_examples", []).append([sid, sheet, r["source_cell"], r["value"], got][:5])
+                        ok = True
                 elif r["symbol"] is not None:
                     ok = isinstance(got, str) and got == r["symbol"]
                 else:
@@ -105,8 +109,12 @@ def main() -> None:
                 extra = rows_ext - rows_ind
                 inherited = {r["source_row"] for r in srecs if r["note"] and "inherited" in r["note"]}
                 res["rows_extra_inherited"] += len(extra & inherited)
-                for row in sorted(extra - inherited):
-                    res["rows_extra_other"].append([sid, sheet, row])
+                if tinfo["tree_form"]:
+                    # the rows below a prefecture row of the hierarchical form carry no prefecture name: not findable by the scan
+                    res["tree_rows_not_scannable"] = res.get("tree_rows_not_scannable", 0) + len(extra - inherited)
+                else:
+                    for row in sorted(extra - inherited):
+                        res["rows_extra_other"].append([sid, sheet, row])
                 # nothing dropped: every non-empty cell of those rows in a data column is a record
                 dcols = set(tinfo["data_cols"].split(",")) if tinfo["data_cols"] else set()
                 nonblank = {r["source_cell"] for r in srecs if not (r["note"] and r["note"].startswith("blank"))}
@@ -191,7 +199,8 @@ def main() -> None:
                          "sheets": d["sheets"], "chiba_rows": d["chiba_rows"], "records": d["records"], "cells_checked": n_cells,
                          "cells_equal": n_cells - n_bad_cells, "additivity_checks": a_chk, "additivity_mismatch": a_bad})  # fmt: skip
     pq.write_table(pa.Table.from_pylist(rows_out, schema=schema), ROOT / "data" / "parquet" / "year_checks.parquet", compression="zstd")
-    print(f"files {res['files']}; cells checked {res['cells_checked']}, equal {res['cells_equal']}, mismatches {len(res['cell_mismatches'])}")
+    print(f"files {res['files']}; cells checked {res['cells_checked']}, equal {res['cells_equal']} (of which float noise {res.get('float_noise', 0)}), mismatches {len(res['cell_mismatches'])}")
+    print(f"tree-form rows not scannable by the prefecture-name scan: {res.get('tree_rows_not_scannable', 0)}")
     print(f"non-empty cells missing from the table {len(res['nonempty_missing'])}; rows missed {len(res['rows_missed'])}; "
           f"rows extra (inherited prefecture) {res['rows_extra_inherited']}, extra other {len(res['rows_extra_other'])}")  # fmt: skip
     print(f"additivity: {add['checks']} checks, equal {add['equal']}, within 1 unit {add['within_1_unit']}, mismatch {add['mismatch']} "

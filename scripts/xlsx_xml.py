@@ -13,7 +13,15 @@ RNS = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
 
 
 def _text(si) -> str:
-    return "".join(t.text or "" for t in si.iter("{%s}t" % NS["m"]))
+    """The text of a shared string or inline string: the plain runs only, not the phonetic guide (rPh) that Excel may keep."""
+    m = "{%s}" % NS["m"]
+    out = []
+    for ch in si:
+        if ch.tag == m + "t":
+            out.append(ch.text or "")
+        elif ch.tag == m + "r":
+            out.extend(t.text or "" for t in ch if t.tag == m + "t")
+    return "".join(out)
 
 
 def cells(path) -> dict:
