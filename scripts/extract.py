@@ -209,12 +209,16 @@ class Layout:
     footnotes: list
     hdr: dict
     hdr_sig: tuple
+    hdr_pos: tuple
     tree: bool  # the legacy form: the first label column holds prefecture, event, date and river system names in turn
     note: str | None = None
 
 
-def header_signature(g: Grid, rows: list) -> tuple:
-    return tuple((r, c, squash(g.get(r, c))) for r in rows for c in range(1, g.ncols + 1) if isinstance(g.get(r, c), str))
+def header_signature(g: Grid, rows: list, positional: bool = False) -> tuple:
+    """The header texts row by row. Without `positional` the columns are left out: the same table can sit two columns further
+    right in the next sheet of a workbook."""
+    return tuple((r, c if positional else 0, squash(g.get(r, c))) for r in rows for c in range(1, g.ncols + 1)
+                 if isinstance(g.get(r, c), str))  # fmt: skip
 
 
 def analyse(g: Grid, prev: Layout | None = None) -> Layout:
@@ -223,11 +227,11 @@ def analyse(g: Grid, prev: Layout | None = None) -> Layout:
     if pref_col is None:
         # a continuation sheet (the rows of the sheet before go on) has no prefecture name at all: same header, same columns
         if prev is not None and prev.pref_col is not None and nrow is not None and g.ncols == prev.ncols:
-            sig = header_signature(g, list(range(1, nrow)))
-            if sig == prev.hdr_sig:
+            sig = header_signature(g, list(range(1, nrow)), positional=True)
+            if sig == prev.hdr_pos:
                 lay = Layout(**{**prev.__dict__, "sheet": g.sheet, "data_start": nrow, "note": "continuation of the sheet before"})
                 return lay
-        return Layout(g.sheet, g.ncols, None, None, None, nrow, [], [], [], [], [], {}, (), False,
+        return Layout(g.sheet, g.ncols, None, None, None, nrow, [], [], [], [], [], {}, (), (), False,
                       "no prefecture name in the sheet and no matching sheet before it")  # fmt: skip
     nm = first_name_row(g, pref_col)
     start = min(x for x in (nm, nrow) if x is not None)
@@ -297,7 +301,7 @@ def analyse(g: Grid, prev: Layout | None = None) -> Layout:
         if isinstance(v, str) and re.match(r"^\s*[注※＊*(（]?\s*(注|※)", v):
             foot.append(squash(v))
     return Layout(g.sheet, g.ncols, title, unit_note, pref_col, start, hdr_rows, key_cols, data_cols, ignored, foot, hdr,
-                  header_signature(g, hdr_rows), tree)  # fmt: skip
+                  header_signature(g, hdr_rows), header_signature(g, hdr_rows, positional=True), tree)  # fmt: skip
 
 
 def measure_of(hdr: dict, c: int) -> tuple[str, str, str | None]:
@@ -356,7 +360,7 @@ def extract_grid(g: Grid, meta: dict, state: State | None = None) -> tuple[list[
             "chiba_rows": 0, "inherited_rows": 0, "ditto_rows": 0, "orphan_rows": 0}  # fmt: skip
     if lay.pref_col is None or not lay.data_cols:
         return [], desc
-    same_table = state.layout is not None and state.layout.hdr_sig == lay.hdr_sig and state.layout.ncols == lay.ncols
+    same_table = state.layout is not None and state.layout.hdr_sig == lay.hdr_sig
     if not same_table:  # a new table: nothing goes on from the sheet before
         state.pref, state.last, state.event, state.date, state.system = None, {}, None, None, None
     state.layout = lay
