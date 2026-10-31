@@ -16,7 +16,7 @@ import yaml
 
 ROOT = Path(__file__).parents[1]
 P = ROOT / "data" / "parquet"
-REPO = "yuiseki/mlit-flood-damage-statistics-chiba-jp-2026-10"
+REPO = "yuiseki/mlit-flood-damage-statistics-chiba-jp"
 DATE = "2026-10-31"
 
 
@@ -108,7 +108,7 @@ configs:
   data_files: parquet/year_checks.parquet
 ---
 
-# mlit-flood-damage-statistics-chiba-jp-2026-10
+# mlit-flood-damage-statistics-chiba-jp
 
 The Chiba rows (the prefecture total and the municipalities) of the statistical tables of the **水害統計調査** (Flood Damage Statistics Survey) of the
 Ministry of Land, Infrastructure, Transport and Tourism (MLIT), as published as Excel files on e-Stat (政府統計の総合窓口,
@@ -128,7 +128,7 @@ is 令和5年 (2023; list published 2026-01-14, tables 2025-07-31 and 2025-10-03
 - A file: `https://www.e-stat.go.jp/stat-search/file-download?statInfId=<ID>&fileKind=0` (the plain download link of the site; no API, no login).
 - Fetched on {DATE}, one request at a time with a 2 s pause. {st['tables_fetched']} Excel files, no HTTP error, no block. The responses carry no `Last-Modified` header
   (null in `catalog`); the publication date of each file is the 公開（更新）日 of the list (`published`, {first_pub[0]} to {first_pub[1]}).
-- The raw files are kept unchanged in `raw/{DATE}/xls/` (the extension is that of the real format, `.xlsx` or `.xls`) with `MANIFEST.json` (sha256, fetch time, headers, URL),
+- The Excel files were kept unchanged locally as `raw/{DATE}/xls/` (the extension is that of the real format, `.xlsx` or `.xls`); **they are not part of this dataset** (fetch them again from e-Stat with `scripts/04_fetch_xls.py` and compare with `raw/{DATE}/MANIFEST.json`: sha256, fetch time, headers, URL),
   and the saved list pages in `raw/{DATE}/listing/`.
 
 ## Which tables are in
@@ -152,7 +152,7 @@ Table families (the title without the table number; the numbering moves between 
 | `parquet/tables.parquet` | {st['sheets_read']} | One sheet read: what was found, key and data columns, the number of Chiba rows |
 | `parquet/catalog.parquet` | {st['files_listed']:,} | One file of the e-Stat list (all years, all formats) with the selection and, if fetched, its sha256 |
 | `parquet/year_checks.parquet` | {len(years)} | One survey year: tables, rows, cells checked, additivity checks |
-| `raw/` | {st['tables_fetched']} + list pages | The Excel files as fetched, MANIFEST.json |
+| `raw/` | MANIFEST.json + list pages | The sha256, fetch time and URL of the {st['tables_fetched']} Excel files (not included), and the saved list pages |
 
 `chiba_long` columns: `survey_year` (the western year; 平成5年 = 1993), `survey_year_label`, `table_id` (the `statInfId`), `table_no` (表-N from the title, null for the base tables),
 `table_title` (the title on the list), `table_family`, `sheet_title` (the title cell of the sheet, whitespace removed; for 表-11 it holds the name of the event),

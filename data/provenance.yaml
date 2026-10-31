@@ -1,4 +1,4 @@
-dataset: yuiseki/mlit-flood-damage-statistics-chiba-jp-2026-10
+dataset: yuiseki/mlit-flood-damage-statistics-chiba-jp
 source:
   site: e-Stat 政府統計の総合窓口
   toukei: 00600590

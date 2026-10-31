@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Push the card, licence, provenance, raw files, listing pages, Parquet, scripts and docs of this dataset.
+"""Push the card, licence, provenance, raw MANIFEST and listing pages (not the Excel files), Parquet, scripts and docs of this dataset.
 
 uv run python src/publish.py             # dry run: list the files and their sizes
 uv run python src/publish.py --push      # one commit; prints the sha and writes docs/revision.json  (NOT to be run before the owner approves)
@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-REPO = "yuiseki/mlit-flood-damage-statistics-chiba-jp-2026-10"
+REPO = "yuiseki/mlit-flood-damage-statistics-chiba-jp"
 
 
 def collect() -> dict[str, Path]:
@@ -29,7 +29,8 @@ def collect() -> dict[str, Path]:
     for p in sorted((DATA / "parquet").glob("*.parquet")):
         files[f"parquet/{p.name}"] = p
     for p in sorted((ROOT / "raw").rglob("*")):
-        if p.is_file():
+        # the Excel files themselves are not published (the user's decision): their sha256 are in MANIFEST.json
+        if p.is_file() and "/xls/" not in p.relative_to(ROOT).as_posix():
             files[p.relative_to(ROOT).as_posix()] = p
     for p in sorted((ROOT / "evidence").glob("*")):
         files[f"evidence/{p.name}"] = p
@@ -76,7 +77,7 @@ def main() -> int:
     api = HfApi()
     api.create_repo(a.repo, repo_type="dataset", exist_ok=True, private=False)
     ops = [CommitOperationAdd(path_in_repo=k, path_or_fileobj=str(v)) for k, v in files.items()]
-    c = api.create_commit(a.repo, ops, repo_type="dataset", commit_message="Chiba rows of the MLIT 水害統計調査 (e-Stat), 1993 to 2023, with the raw Excel files")
+    c = api.create_commit(a.repo, ops, repo_type="dataset", commit_message="Chiba rows of the MLIT 水害統計調査 (e-Stat), 1993 to 2023, without the raw Excel files")
     rev = {"repo": a.repo, "revision": c.oid, "pushed": datetime.now(UTC).isoformat(timespec="seconds"),
            "sha256": {k: sha256(v) for k, v in files.items() if k.startswith("parquet/") or k in ("README.md", "LICENSE")}}  # fmt: skip
     (ROOT / "docs" / "revision.json").write_text(json.dumps(rev, indent=1) + "\n")
