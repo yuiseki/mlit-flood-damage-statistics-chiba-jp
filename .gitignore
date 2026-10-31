@@ -3,3 +3,4 @@ __pycache__/
 data/hub_readback/
 raw/
 data/parquet/
+data/_verify_xlsx/
