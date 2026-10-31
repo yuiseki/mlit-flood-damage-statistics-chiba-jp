@@ -190,6 +190,7 @@ def header_text(g: Grid, r: int, c: int) -> tuple[str, str] | None:
 
 UNIT_RE = re.compile(r"[（(]([^（）()]*?(?:円|㎡|m2|ha|棟|人|世帯|戸|件|cm|ｈａ|数|％|%|㎞|km|ｍ|m|ａ)[^（）()]*?)[）)]")
 DITTO = "〃"
+TREE_HEADER = ["都道府県名", "異常気象名", "（水害発生年月）", "水系・沿岸名"]
 DATE_LIKE = re.compile(r"^[\d.．～~〜\-－ー]+$")
 
 
@@ -219,7 +220,6 @@ def header_signature(g: Grid, rows: list) -> tuple:
 def analyse(g: Grid, prev: Layout | None = None) -> Layout:
     pref_col = find_pref_col(g)
     nrow = first_numeric_row(g)
-    ditto_cells = sum(1 for (r, c), v in g.cells.items() if c <= 6 and isinstance(v, str) and squash(v) == DITTO)
     if pref_col is None:
         # a continuation sheet (the rows of the sheet before go on) has no prefecture name at all: same header, same columns
         if prev is not None and prev.pref_col is not None and nrow is not None and g.ncols == prev.ncols:
@@ -289,8 +289,8 @@ def analyse(g: Grid, prev: Layout | None = None) -> Layout:
             ignored.append(c)  # a label column to the right of the data (a repeat of the row labels)
             continue
         data_cols.append(c)
-    tree = bool(key_cols) and ditto_cells >= 5 and sum(
-        1 for r in rows if isinstance(g.get(r, key_cols[0]), str) and squash(g.get(r, key_cols[0])) == DITTO) >= 3  # fmt: skip
+    # the legacy tree form: the first label column holds, stacked in its header, 都道府県名 / 異常気象名 / （水害発生年月） / 水系・沿岸名
+    tree = bool(key_cols) and [x for x, _ in hdr[key_cols[0]]][:4] == TREE_HEADER
     foot = []
     for r in range(start, g.nrows + 1):
         v = g.get(r, pref_col)
@@ -363,10 +363,7 @@ def extract_grid(g: Grid, meta: dict, state: State | None = None) -> tuple[list[
     key_names = {c: "/".join(s for s, _ in lay.hdr[c]) or f"col{col_letter(c)}" for c in lay.key_cols}
     tree_names = None
     if lay.tree:
-        segs = [s for s, _ in lay.hdr[lay.key_cols[0]]]
-        if len(segs) != 4:
-            raise ValueError(f"legacy tree form: expected 4 header lines in the first label column, got {segs} ({g.path} {g.sheet})")
-        tree_names = segs  # prefecture, event, date, river system
+        tree_names = TREE_HEADER  # prefecture, event, date, river system
     muni_col = next((c for c in lay.key_cols if re.search(r"市区町村|市町村", key_names[c]) and c != lay.pref_col), None)
     code_col = next((c for c in lay.key_cols if CODE_AREA_RE.search(key_names[c])), None)
     out, chiba_rows, inherited, dittos = [], set(), 0, 0
