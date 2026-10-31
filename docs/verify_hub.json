@@ -1,0 +1,110 @@
+{
+ "repo": "yuiseki/mlit-flood-damage-statistics-chiba-jp",
+ "revision": "2bfe2aaf11f5f9c71e18b7041a80a6546c6938ce",
+ "files_checked": 6,
+ "files_on_hub": 170,
+ "tables": {
+  "parquet/catalog.parquet": {
+   "rows": 1661,
+   "non_null": {
+    "survey_year": 1661,
+    "survey_year_label": 1661,
+    "tstat": 1661,
+    "tclass1": 1661,
+    "group": 1390,
+    "title": 1661,
+    "table_no": 1060,
+    "statInfId": 1661,
+    "survey_ym": 1661,
+    "published": 1661,
+    "formats": 1661,
+    "selection": 1661,
+    "fetched": 1661,
+    "fetched_at": 495,
+    "source_file": 495,
+    "bytes": 495,
+    "sha256": 495,
+    "last_modified_header": 0,
+    "content_disposition": 495,
+    "sheets_read": 495,
+    "chiba_rows": 495
+   }
+  },
+  "parquet/chiba_long.parquet": {
+   "rows": 244476,
+   "non_null": {
+    "survey_year": 244476,
+    "survey_year_label": 244476,
+    "table_id": 244476,
+    "table_no": 51961,
+    "table_title": 244476,
+    "table_family": 244476,
+    "sheet_title": 56146,
+    "pref_label": 244476,
+    "area_code": 0,
+    "area_name": 244476,
+    "level": 244476,
+    "row_class": 215975,
+    "measure": 244476,
+    "value": 210747,
+    "unit": 159130,
+    "symbol": 0,
+    "note": 179490,
+    "source_statInfId": 244476,
+    "source_file": 244476,
+    "source_sheet": 244476,
+    "source_cell": 244476,
+    "source_row": 244476,
+    "source_col": 244476,
+    "header_cells": 244476
+   }
+  },
+  "parquet/tables.parquet": {
+   "rows": 649,
+   "non_null": {
+    "survey_year": 649,
+    "survey_year_label": 649,
+    "table_id": 649,
+    "table_no": 332,
+    "table_title": 649,
+    "table_family": 649,
+    "published": 649,
+    "source_file": 649,
+    "source_sha256": 649,
+    "fetched_at": 649,
+    "source_sheet": 649,
+    "sheet_title": 373,
+    "unit_note": 369,
+    "key_cols": 649,
+    "data_cols": 649,
+    "ignored_label_cols": 649,
+    "first_data_row": 620,
+    "sheet_rows": 649,
+    "chiba_rows": 649,
+    "inherited_rows": 649,
+    "ditto_rows": 649,
+    "orphan_rows": 649,
+    "tree_form": 649,
+    "records": 649,
+    "footnotes": 0,
+    "reader_note": 123
+   }
+  },
+  "parquet/year_checks.parquet": {
+   "rows": 32,
+   "non_null": {
+    "survey_year": 32,
+    "tables_fetched": 32,
+    "tables_with_chiba_rows": 32,
+    "sheets": 32,
+    "chiba_rows": 32,
+    "records": 32,
+    "cells_checked": 32,
+    "cells_equal": 32,
+    "additivity_checks": 32,
+    "additivity_mismatch": 32
+   }
+  }
+ },
+ "problems": []
+}

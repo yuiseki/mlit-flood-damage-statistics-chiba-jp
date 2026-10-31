@@ -1,7 +1,7 @@
 # mlit-flood-damage-statistics-chiba-jp
 
 Scripts that list, fetch, read and verify the Chiba rows of the MLIT 水害統計調査 Excel tables on e-Stat (1993 to 2023), and prepare the Hugging Face dataset
-`yuiseki/mlit-flood-damage-statistics-chiba-jp` (not yet published). See `data/README.md` (the card) and `docs/STEPS.md`.
+`yuiseki/mlit-flood-damage-statistics-chiba-jp` (published at revision `2bfe2aaf11f5f9c71e18b7041a80a6546c6938ce`; `docs/revision.json`; <https://huggingface.co/datasets/yuiseki/mlit-flood-damage-statistics-chiba-jp>). See `data/README.md` (the card) and `docs/STEPS.md`.
 
     uv sync
     uv run pytest

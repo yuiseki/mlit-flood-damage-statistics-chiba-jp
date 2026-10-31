@@ -1,0 +1,13 @@
+{
+ "repo": "yuiseki/mlit-flood-damage-statistics-chiba-jp",
+ "revision": "2bfe2aaf11f5f9c71e18b7041a80a6546c6938ce",
+ "pushed": "2026-10-31T09:27:29+00:00",
+ "sha256": {
+  "README.md": "c3d1d392a30b82ab2b894ca62aaa5b780ebf683c6994930171b2619896fcc473",
+  "LICENSE": "3e28ab1d2ea374c62c3d364dfa64afc4b191544fe89c6403db8acbe4d45c6afc",
+  "parquet/catalog.parquet": "8107d6826d5e319f5f44438c93d220e763eb5528e857284f40f947b6be027e31",
+  "parquet/chiba_long.parquet": "b7e5ba55db4f86cd30be253eaf23325a05db82b94c3ad3a54a7be6839738014c",
+  "parquet/tables.parquet": "3a5d9d7eae72f5b4499fb0c5c585420791bbb6cc855cc3632f7717cc075fcc86",
+  "parquet/year_checks.parquet": "6e29108a2a3146a39b1da529693080c6653a3268b07bba88470a0a3a3ca6e466"
+ }
+}
