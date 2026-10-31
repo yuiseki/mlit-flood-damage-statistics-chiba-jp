@@ -1,0 +1,59 @@
+dataset: yuiseki/mlit-flood-damage-statistics-chiba-jp-2026-10
+source:
+  site: e-Stat 政府統計の総合窓口
+  toukei: 00600590
+  name: 水害統計調査
+  agency: 国土交通省
+  list_url: https://www.e-stat.go.jp/stat-search/files?toukei=00600590
+  download_url_pattern: https://www.e-stat.go.jp/stat-search/file-download?statInfId=<ID>&fileKind=0
+fetched:
+  date: '2026-10-31'
+  pause_seconds: 2
+  files: 495
+  http_errors: 0
+  api_used: false
+  login_used: false
+licence:
+  name: e-Stat terms of use (政府標準利用規約 第2.0版 準拠; CC BY 4.0 互換とされる)
+  url: https://www.e-stat.go.jp/terms-of-use
+  evidence:
+  - evidence/terms-of-use.html
+  - evidence/terms-of-use.txt
+  - evidence/terms-of-use.meta.json
+  attribution: 出典：政府統計の総合窓口(e-Stat)（https://www.e-stat.go.jp/）、国土交通省『水害統計調査』を加工して作成
+coverage:
+  survey_years_with_records: 1993-2023
+  survey_years_listed: 32
+  latest_listed: '2024 (令和6年): PDF overview only, no table'
+  after_2024: not listed at fetch time
+counts:
+  records: 244476
+  chiba_rows: 17474
+  sheets_read: 649
+  tables_fetched: 495
+  tables_with_chiba_rows: 461
+  files_listed: 1661
+verification:
+  cells_checked: 244476
+  cells_equal: 244476
+  float_noise: 44
+  additivity:
+    checks: 14966
+    equal: 14297
+    within_1_unit: 38
+    mismatch: 631
+    tables_with_checks: 122
+    tables_with_mismatch: 31
+parquet_sha256:
+  catalog.parquet: 8107d6826d5e319f5f44438c93d220e763eb5528e857284f40f947b6be027e31
+  chiba_long.parquet: b7e5ba55db4f86cd30be253eaf23325a05db82b94c3ad3a54a7be6839738014c
+  tables.parquet: 3a5d9d7eae72f5b4499fb0c5c585420791bbb6cc855cc3632f7717cc075fcc86
+  year_checks.parquet: 6e29108a2a3146a39b1da529693080c6653a3268b07bba88470a0a3a3ca6e466
+known_revision_notes:
+- ※「平成２８年水害統計」の数値等について、平成３１年４月２６日修正しました。
+- ※「平成２７年水害統計」、「平成２６年水害統計」、「平成２５年水害統計」、「平成２４年水害統計」の数値等について、令和元年６月２８日修正しました。
+- ※「平成２９年水害統計」の数値等について、令和元年１２月２５日修正しました。
+- ※「令和元年水害統計」、「平成３０年水害統計」、「平成２９年水害統計」、「平成２８年水害統計」、「平成２７年水害統計」の数値等について令和４年８月１０日修正しました。
+- ※「平成１９年水害統計」、「平成２１年水害統計」、「平成２２年水害統計」、「平成２３年水害統計」、「平成２４年水害統計」の数値等について令和５年４月２６日修正しました。
+- ※「平成14年水害統計」～「平成21年水害統計」、「平成26年水害統計」～「令和3年水害統計」の基本表について、令和6年9月18日修正しました。
+- ※「「平成24年水害統計」、「平成26年水害統計」、「平成28年水害統計」、「平成29年水害統計」、「令和2年水害統計」～「令和5年水害統計」の参考等について、令和７年１０月３日修正しました。

@@ -1,0 +1,12 @@
+yuiseki/mlit-flood-damage-statistics-chiba-jp-2026-10
+  663 files, 282,673,966 bytes
+  (top)                                3 files         31,964 bytes
+  docs                                14 files      1,028,666 bytes
+  evidence                             3 files        137,469 bytes
+  parquet                              4 files      1,157,095 bytes
+  raw/2026-10-31/MANIFEST.json         1 files        308,551 bytes
+  raw/2026-10-31/listing             130 files     24,829,417 bytes
+  raw/2026-10-31/xls                 495 files    255,090,230 bytes
+  scripts                             13 files         90,574 bytes
+
+dry run. pass --push to upload

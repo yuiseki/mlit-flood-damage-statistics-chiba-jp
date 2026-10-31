@@ -25,7 +25,7 @@ def main() -> None:
     cat, tab, long = (f"read_parquet('{P}/{n}.parquet')" for n in ("catalog", "tables", "chiba_long"))
     ver = json.loads((ROOT / "docs" / "06_verify.json").read_text())
     years = q(f"""select c.survey_year, c.survey_year_label, count(*) files, sum((formats like '%EXCEL%')::int) excel, sum((formats like '%PDF%')::int) pdf,
-                  sum((selection='selected')::int) selected, sum(fetched::int) fetched, sum((chiba_rows>0)::int) with_chiba, coalesce(sum(chiba_rows),0) chiba_rows
+                  sum((selection='selected')::int) selected, sum(fetched::int) fetched, coalesce(sum((chiba_rows>0)::int),0) with_chiba, coalesce(sum(chiba_rows),0) chiba_rows
                   from {cat} c group by 1,2 order by 1""")
     ysheets = {r[0]: r[1:] for r in q(f"select survey_year, count(*), sum(chiba_rows), sum(records) from {tab} group by 1")}
     lines = ["survey_year\tsurvey_year_label\tfiles_listed\texcel\tpdf\tselected\tfetched\tfiles_with_chiba_rows\tchiba_rows\tsheets_read\trecords"]

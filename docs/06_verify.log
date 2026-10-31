@@ -1,5 +1,5 @@
-files 495; cells checked 249626, equal 249626 (of which float noise 44), mismatches 0
-tree-form rows not scannable by the prefecture-name scan: 11133
+files 495; cells checked 244476, equal 244476 (of which float noise 44), mismatches 0
+tree-form rows not scannable by the prefecture-name scan: 10734
 non-empty cells missing from the table 0; rows missed 0; rows extra (inherited prefecture) 2302, extra other 0
-additivity: 14868 checks, equal 14090, within 1 unit 40, mismatch 738 in 35 of 124 tables
+additivity: 14966 checks, equal 14297, within 1 unit 38, mismatch 631 in 31 of 122 tables
 sheets without Chiba rows: 170
